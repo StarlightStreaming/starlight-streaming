@@ -309,6 +309,11 @@
       background: rgba(192,132,252,0.12); color: var(--accent);
     }
     .card-rating { color: var(--gold); }
+    .card-desc {
+      font-size: 0.72rem; color: var(--muted); line-height: 1.5;
+      margin-bottom: 0.4rem; display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
 
     /* ── Featured banner ── */
     .featured {
@@ -432,11 +437,11 @@
   <div class="featured-bg"></div>
   <div class="featured-grid"></div>
   <div class="featured-content">
-    <div class="featured-label">Featured Series</div>
-    <h2>Spotlight Picks</h2>
-    <p>Hand-picked series to get you started. From action-packed shonen to quiet slice-of-life — there's something here for every mood and every night.</p>
+    <div class="featured-label">Staff Pick · Classic Series</div>
+    <h2>Fullmetal Alchemist:<br/>Brotherhood</h2>
+    <p>Two brothers. One forbidden quest. The most acclaimed anime of all time follows Edward and Alphonse Elric as they search for the Philosopher's Stone — and pay a devastating price for the power to reclaim what they lost.</p>
     <div class="featured-actions">
-      <button class="btn-primary">
+      <button class="btn-primary" onclick="window.location.href='watch.html'">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="2,1 13,7 2,13"/></svg>
         Watch Now
       </button>
@@ -456,13 +461,9 @@
   <div class="genre-filter">
     <button class="genre-btn active" onclick="setGenre(this,'all')">All</button>
     <button class="genre-btn" onclick="setGenre(this,'action')">Action</button>
-    <button class="genre-btn" onclick="setGenre(this,'romance')">Romance</button>
     <button class="genre-btn" onclick="setGenre(this,'fantasy')">Fantasy</button>
-    <button class="genre-btn" onclick="setGenre(this,'scifi')">Sci-Fi</button>
-    <button class="genre-btn" onclick="setGenre(this,'horror')">Horror</button>
-    <button class="genre-btn" onclick="setGenre(this,'slice')">Slice of Life</button>
-    <button class="genre-btn" onclick="setGenre(this,'sports')">Sports</button>
-    <button class="genre-btn" onclick="setGenre(this,'mecha')">Mecha</button>
+    <button class="genre-btn" onclick="setGenre(this,'isekai')">Isekai</button>
+    <button class="genre-btn" onclick="setGenre(this,'shonen')">Shonen</button>
   </div>
 
   <!-- Cards -->
@@ -491,27 +492,72 @@
 
 <script>
   const ANIME = [
-    { title: "Celestial Blades", genre: "action",  year: 2024, rating: "9.1", eps: 24, color: "#2d1b69" },
-    { title: "Sakura Protocol", genre: "romance", year: 2023, rating: "8.7", eps: 12, color: "#1a1040" },
-    { title: "Void Chronicles", genre: "scifi",   year: 2024, rating: "9.3", eps: 26, color: "#0a1628" },
-    { title: "Ember Shrine",    genre: "fantasy",  year: 2023, rating: "8.9", eps: 13, color: "#1e0a10" },
-    { title: "Night Parade",    genre: "horror",   year: 2024, rating: "8.4", eps: 12, color: "#0d0d1a" },
-    { title: "Café at the End", genre: "slice",    year: 2023, rating: "9.0", eps: 24, color: "#0a1e15" },
-    { title: "Iron Striker",    genre: "mecha",    year: 2024, rating: "8.6", eps: 25, color: "#1a1200" },
-    { title: "Run, Hana!",      genre: "sports",   year: 2023, rating: "8.8", eps: 25, color: "#0a1a1a" },
-    { title: "Moonlit Path",    genre: "romance",  year: 2024, rating: "8.5", eps: 12, color: "#1a0d2e" },
-    { title: "Starfall Gate",   genre: "fantasy",  year: 2023, rating: "9.2", eps: 25, color: "#0d1a2e" },
+    {
+      title: "Fullmetal Alchemist: Brotherhood",
+      genre: "action", year: 2009, rating: "9.1", eps: 64,
+      color: "#3d1a00",
+      desc: "Two brothers use alchemy to resurrect their mother — and pay a terrible price.",
+      trailerId: "--IcmZkvL0Q"
+    },
+    {
+      title: "Attack on Titan",
+      genre: "action", year: 2013, rating: "9.0", eps: 88,
+      color: "#1a0e00",
+      desc: "Humanity's last survivors fight monstrous giants behind towering walls.",
+      trailerId: "MGRm3FKBpmo"
+    },
+    {
+      title: "Demon Slayer",
+      genre: "action", year: 2019, rating: "8.7", eps: 44,
+      color: "#1a0020",
+      desc: "A kind boy becomes a demon slayer to cure his sister and avenge his family.",
+      trailerId: "VQGCKyvzIM4"
+    },
+    {
+      title: "Hunter x Hunter",
+      genre: "shonen", year: 2011, rating: "9.0", eps: 148,
+      color: "#001a0e",
+      desc: "A cheerful boy sets off to find his father — one of the world's greatest hunters.",
+      trailerId: "D4CNlZSp_VM"
+    },
+    {
+      title: "Re:Zero",
+      genre: "isekai", year: 2016, rating: "8.6", eps: 50,
+      color: "#00101a",
+      desc: "A boy transported to a fantasy world discovers he can return from death — but at a cost.",
+      trailerId: "0giWFKpjUMY"
+    },
+    {
+      title: "Made in Abyss",
+      genre: "fantasy", year: 2017, rating: "8.7", eps: 13,
+      color: "#0a0a1a",
+      desc: "A girl and her robot companion descend into a vast, beautiful, and terrifying chasm.",
+      trailerId: "5GpGOHKafvY"
+    },
+    {
+      title: "Sword Art Online",
+      genre: "isekai", year: 2012, rating: "7.7", eps: 25,
+      color: "#001020",
+      desc: "Ten thousand players are trapped inside a virtual reality game with no way out.",
+      trailerId: "6ohYYalaQ0E"
+    },
+    {
+      title: "That Time I Got Reincarnated as a Slime",
+      genre: "isekai", year: 2018, rating: "8.1", eps: 48,
+      color: "#001a1a",
+      desc: "A salaryman reincarnates as a slime monster — and builds a nation from the ground up.",
+      trailerId: "lITBChFxMRg"
+    },
   ];
 
   const CONTINUE = [
-    { title: "Void Chronicles", genre: "scifi",  year: 2024, rating: "9.3", eps: 26, color: "#0a1628", progress: 65 },
-    { title: "Celestial Blades",genre: "action", year: 2024, rating: "9.1", eps: 24, color: "#2d1b69", progress: 30 },
-    { title: "Run, Hana!",      genre: "sports", year: 2023, rating: "8.8", eps: 25, color: "#0a1a1a", progress: 80 },
+    { title: "Fullmetal Alchemist: Brotherhood", genre: "action", year: 2009, rating: "9.1", eps: 64, color: "#3d1a00", progress: 42 },
+    { title: "Attack on Titan",                  genre: "action", year: 2013, rating: "9.0", eps: 88, color: "#1a0e00", progress: 75 },
+    { title: "Re:Zero",                           genre: "isekai", year: 2016, rating: "8.6", eps: 50, color: "#00101a", progress: 20 },
   ];
 
   const GENRE_LABELS = {
-    action:"Action", romance:"Romance", fantasy:"Fantasy", scifi:"Sci-Fi",
-    horror:"Horror", slice:"Slice of Life", sports:"Sports", mecha:"Mecha"
+    action:"Action", fantasy:"Fantasy", isekai:"Isekai", shonen:"Shonen"
   };
 
   function makeCard(anime, showProgress) {
@@ -519,8 +565,14 @@
     const prog = showProgress
       ? `<div class="progress-bar"><div class="progress-fill" style="width:${anime.progress}%"></div></div>`
       : '';
+    const dest = anime.trailerId
+      ? `https://www.youtube.com/watch?v=${anime.trailerId}`
+      : 'watch.html';
+    const onclick = anime.trailerId
+      ? `window.open('${dest}','_blank')`
+      : `window.location.href='watch.html'`;
     return `
-      <div class="card" data-genre="${anime.genre}" onclick="window.location.href='watch.html'" style="cursor:pointer;">
+      <div class="card" data-genre="${anime.genre}" onclick="${onclick}" style="cursor:pointer;">
         <div class="card-thumb">
           <div class="card-thumb-placeholder" style="background: linear-gradient(160deg, ${anime.color} 0%, #05040f 100%);">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" opacity="0.3">
@@ -535,6 +587,7 @@
         </div>
         <div class="card-info">
           <div class="card-title">${anime.title}</div>
+          ${anime.desc ? `<div class="card-desc">${anime.desc}</div>` : ''}
           <div class="card-meta">
             <span class="card-tag">${label}</span>
             <span class="card-rating">★ ${anime.rating}</span>

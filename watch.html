@@ -177,7 +177,7 @@
       width: 110px; flex-shrink: 0; aspect-ratio: 2/3;
       border-radius: 6px; overflow: hidden;
       border: 1px solid var(--card-border);
-      background: linear-gradient(160deg, #2d1b69 0%, #05040f 100%);
+      background: linear-gradient(160deg, #3d1a00 0%, #05040f 100%);
       display: flex; align-items: center; justify-content: center;
     }
     .show-poster svg { opacity: 0.3; }
@@ -398,22 +398,22 @@
             </svg>
           </div>
           <div class="show-header-text">
-            <div class="show-title" id="show-title">Void Chronicles</div>
+            <div class="show-title" id="show-title">Fullmetal Alchemist: Brotherhood</div>
             <div class="show-tags">
-              <span class="tag tag-genre">Sci-Fi</span>
               <span class="tag tag-genre">Action</span>
-              <span class="tag tag-year">2024</span>
-              <span class="tag tag-eps">26 Episodes</span>
+              <span class="tag tag-genre">Adventure</span>
+              <span class="tag tag-year">2009</span>
+              <span class="tag tag-eps">64 Episodes</span>
             </div>
             <div class="show-rating">
-              ★★★★★ 9.3
-              <span>· 42,800 ratings</span>
+              ★★★★★ 9.1
+              <span>· 1.2M ratings · #1 on MyAnimeList</span>
             </div>
           </div>
         </div>
 
         <p class="show-desc">
-          In a distant future where humanity has colonized the edges of the galaxy, a lone scout discovers an ancient void signal that may unravel the fabric of known space. Part hard sci-fi epic, part intimate character study — this series redefines what anime can be.
+          After a failed attempt to resurrect their dead mother using alchemy, brothers Edward and Alphonse Elric are left scarred — Ed loses two limbs, Al loses his entire body. Bound to a suit of armor, Al joins Ed on a quest to find the legendary Philosopher's Stone and restore what was taken from them. What they uncover is far darker than either brother imagined.
         </p>
 
         <div class="show-actions">
@@ -429,8 +429,8 @@
       <!-- Episode list -->
       <div class="episodes-heading">Episodes</div>
       <select class="season-select" onchange="changeSeason(this.value)">
-        <option value="1">Season 1</option>
-        <option value="2">Season 2</option>
+        <option value="1">Part 1 — Episodes 1–12</option>
+        <option value="2">Part 2 — Episodes 13–24</option>
       </select>
 
       <div class="ep-list" id="ep-list">
@@ -462,28 +462,40 @@
   // Example: for https://www.youtube.com/watch?v=dQw4w9WgXcQ, the ID is "dQw4w9WgXcQ"
   const EPISODES = {
     1: [
-      { num: 1,  title: "The Signal at the Edge",    duration: "24 min", progress: 100, youtubeId: "" },
-      { num: 2,  title: "Into the Void",              duration: "23 min", progress: 100, youtubeId: "" },
-      { num: 3,  title: "Ghost Frequencies",          duration: "25 min", progress: 65,  youtubeId: "" },
-      { num: 4,  title: "The First Contact",          duration: "24 min", progress: 0,   youtubeId: "" },
-      { num: 5,  title: "Starfall Protocol",          duration: "24 min", progress: 0,   youtubeId: "" },
-      { num: 6,  title: "Echoes of the Ancients",     duration: "26 min", progress: 0,   youtubeId: "" },
-      { num: 7,  title: "Dark Matter Heart",          duration: "23 min", progress: 0,   youtubeId: "" },
-      { num: 8,  title: "The Collapse",               duration: "25 min", progress: 0,   youtubeId: "" },
+      { num: 1,  title: "Fullmetal Alchemist",        duration: "24 min", progress: 100, youtubeId: "--IcmZkvL0Q" },
+      { num: 2,  title: "The First Day",               duration: "24 min", progress: 100, youtubeId: "" },
+      { num: 3,  title: "City of Heresy",              duration: "24 min", progress: 80,  youtubeId: "" },
+      { num: 4,  title: "An Alchemist's Anguish",      duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 5,  title: "Rain of Sorrows",             duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 6,  title: "Road of Hope",                duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 7,  title: "Hidden Truths",               duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 8,  title: "The Fifth Laboratory",        duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 9,  title: "Created Feelings",            duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 10, title: "Separate Destinations",       duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 11, title: "Miracle at Rush Valley",      duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 12, title: "One Is All, All Is One",      duration: "24 min", progress: 0,   youtubeId: "" },
     ],
     2: [
-      { num: 1,  title: "Beyond the Rift",            duration: "24 min", progress: 0,   youtubeId: "" },
-      { num: 2,  title: "New Horizons",               duration: "23 min", progress: 0,   youtubeId: "" },
-      { num: 3,  title: "The Unnamed Star",           duration: "25 min", progress: 0,   youtubeId: "" },
-      { num: 4,  title: "Fracture Point",             duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 13, title: "Beasts of Dublith",           duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 14, title: "Those Who Lurk Underground",  duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 15, title: "Envoy from the East",         duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 16, title: "Footsteps of a Comrade-in-Arms", duration: "24 min", progress: 0, youtubeId: "" },
+      { num: 17, title: "Cold Flame",                  duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 18, title: "The Arrogant Palm of a Small Human", duration: "24 min", progress: 0, youtubeId: "" },
+      { num: 19, title: "Death of the Undying",        duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 20, title: "Father Before the Grave",     duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 21, title: "Advance of the Fool",         duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 22, title: "Backs in the Distance",       duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 23, title: "Girl on the Battlefield",     duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 24, title: "Inside the Belly",            duration: "24 min", progress: 0,   youtubeId: "" },
     ]
   };
 
   const RELATED = [
-    { title: "Celestial Blades",  genre: "Action",  year: 2024, rating: "9.1", color: "#2d1b69" },
-    { title: "Starfall Gate",     genre: "Fantasy", year: 2023, rating: "9.2", color: "#0d1a2e" },
-    { title: "Iron Striker",      genre: "Mecha",   year: 2024, rating: "8.6", color: "#1a1200" },
-    { title: "Ember Shrine",      genre: "Fantasy", year: 2023, rating: "8.9", color: "#1e0a10" },
+    { title: "Attack on Titan",      genre: "Action",  year: 2013, rating: "9.0", color: "#1a0e00" },
+    { title: "Demon Slayer",          genre: "Action",  year: 2019, rating: "8.7", color: "#1a0020" },
+    { title: "Hunter x Hunter",       genre: "Shonen",  year: 2011, rating: "9.0", color: "#001a0e" },
+    { title: "Made in Abyss",         genre: "Fantasy", year: 2017, rating: "8.7", color: "#0a0a1a" },
   ];
 
   let currentSeason = 1;
