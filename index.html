@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Starlight Streaming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #05040f;
+      --bg2: #0c0b1e;
+      --bg3: #13112a;
+      --accent: #c084fc;
+      --accent2: #818cf8;
+      --gold: #fbbf24;
+      --text: #f1f0ff;
+      --muted: #7c7a9e;
+      --card-bg: #0f0e22;
+      --card-border: rgba(192, 132, 252, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── Stars background ── */
+    .stars {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(129,140,248,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 10%, rgba(192,132,252,0.08) 0%, transparent 55%);
+    }
+    .stars::before, .stars::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 20%, rgba(255,255,255,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 90% 75%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 92%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5% 45%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 78% 42%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 48% 55%, rgba(192,132,252,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 10%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 22% 88%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    }
+    .stars::after {
+      background-image:
+        radial-gradient(1px 1px at 8% 25%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(2px 2px at 52% 18%, rgba(129,140,248,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 72%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 88% 48%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 44% 78%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 17% 95%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 73% 5%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(2px 2px at 3% 80%, rgba(192,132,252,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 96% 88%, rgba(255,255,255,0.6) 0%, transparent 100%);
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,4,15,0.7);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(192,132,252,0.1);
+    }
+    .logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      display: flex; align-items: center; gap: 0.6rem;
+      text-decoration: none;
+    }
+    .logo-star {
+      width: 22px; height: 22px; flex-shrink: 0;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      letter-spacing: 0.03em; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-btn {
+      background: var(--accent); color: #0f0e22;
+      border: none; padding: 0.5rem 1.2rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.04em; transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.85; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 4rem;
+    }
+    .hero-inner { max-width: 780px; }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid rgba(192,132,252,0.35);
+      padding: 0.35rem 1rem; border-radius: 2px; margin-bottom: 2rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-title-wrap {
+      position: relative; display: inline-block;
+      margin-bottom: 0.6rem;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+      margin-bottom: 0;
+      position: relative; display: inline-block;
+    }
+    .hero h1 .title-starlight {
+      background: linear-gradient(100deg, #ffffff 0%, var(--accent) 40%, var(--accent2) 70%, #ffffff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+    }
+    .hero h1 .title-streaming {
+      color: var(--text);
+      opacity: 0.92;
+    }
+    /* shooting star trail behind the title */
+    .hero-title-wrap::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: -60px;
+      width: 50px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent));
+      border-radius: 2px;
+      transform: translateY(-50%) rotate(-18deg);
+      opacity: 0.6;
+      animation: trailPulse 3s ease-in-out infinite;
+    }
+    .hero h1 .title-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin: 0 4px 4px;
+      vertical-align: middle;
+      box-shadow: 0 0 10px var(--accent), 0 0 24px rgba(192,132,252,0.5);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    @keyframes trailPulse {
+      0%,100% { opacity: 0.6; width: 50px; }
+      50% { opacity: 0.25; width: 30px; }
+    }
+    @keyframes dotPulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.7); opacity: 0.5; }
+    }
+    .hero-tagline {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s 0.28s ease both;
+    }
+    .hero p {
+      font-size: 1.1rem; color: var(--muted); line-height: 1.75;
+      max-width: 520px; margin: 0 auto 2.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+    .btn-primary {
+      background: var(--accent); color: #0f0e22;
+      border: none; padding: 0.85rem 2rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.04em; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2); padding: 0.85rem 2rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 400;
+      cursor: pointer; letter-spacing: 0.04em; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Genre Filter ── */
+    .section {
+      position: relative; z-index: 1;
+      padding: 4rem 3rem;
+    }
+    .section-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600;
+      letter-spacing: 0.1em; color: var(--text);
+    }
+    .see-all {
+      font-size: 0.8rem; color: var(--accent); text-decoration: none;
+      letter-spacing: 0.05em; transition: opacity 0.2s;
+    }
+    .see-all:hover { opacity: 0.7; }
+
+    .genre-filter {
+      display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 2rem;
+    }
+    .genre-btn {
+      background: var(--bg3); color: var(--muted);
+      border: 1px solid var(--card-border); padding: 0.4rem 1rem; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; letter-spacing: 0.06em;
+      cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+    }
+    .genre-btn:hover, .genre-btn.active {
+      background: rgba(192,132,252,0.15); color: var(--accent);
+      border-color: rgba(192,132,252,0.4);
+    }
+
+    /* ── Cards grid ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.2rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px; overflow: hidden;
+      cursor: pointer; transition: all 0.25s;
+      position: relative;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(192,132,252,0.4); }
+    .card:hover .card-overlay { opacity: 1; }
+    .card-thumb {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--bg3);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-thumb-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.5rem;
+    }
+    .card-overlay {
+      position: absolute; inset: 0;
+      background: rgba(5,4,15,0.75);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .play-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+    }
+    .play-icon svg { margin-left: 3px; }
+    .card-info { padding: 0.75rem; }
+    .card-title {
+      font-size: 0.85rem; font-weight: 500; color: var(--text);
+      margin-bottom: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 0.6rem; }
+    .card-tag {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem; border-radius: 2px;
+      background: rgba(192,132,252,0.12); color: var(--accent);
+    }
+    .card-rating { color: var(--gold); }
+
+    /* ── Featured banner ── */
+    .featured {
+      position: relative; z-index: 1;
+      margin: 0 3rem 2rem;
+      background: var(--bg3);
+      border: 1px solid var(--card-border);
+      border-radius: 8px; overflow: hidden;
+      padding: 3rem;
+      display: flex; align-items: flex-end;
+      min-height: 320px;
+    }
+    .featured-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(129,140,248,0.15) 0%, rgba(192,132,252,0.08) 50%, transparent 100%);
+    }
+    .featured-grid {
+      position: absolute; inset: 0; opacity: 0.04;
+      background-image: linear-gradient(var(--accent) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .featured-content { position: relative; z-index: 1; max-width: 520px; }
+    .featured-label {
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .featured-label::before {
+      content: ''; display: inline-block; width: 24px; height: 1px; background: var(--gold);
+    }
+    .featured h2 {
+      font-family: 'Cinzel', serif; font-size: 2.2rem; font-weight: 700;
+      line-height: 1.1; margin-bottom: 0.75rem;
+    }
+    .featured p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .featured-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    /* ── Continue watching ── */
+    .progress-bar {
+      height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px;
+      margin-top: 0.5rem; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: var(--accent); border-radius: 2px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid rgba(192,132,252,0.1);
+      padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.08em;
+    }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── Divider ── */
+    .divider {
+      position: relative; z-index: 1;
+      height: 1px; background: rgba(192,132,252,0.08);
+      margin: 0 3rem;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="#" class="logo">
+    <svg class="logo-star" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="11,1 13.5,8.5 21.5,8.5 15.2,13.2 17.6,21 11,16.5 4.4,21 6.8,13.2 0.5,8.5 8.5,8.5"
+        fill="none" stroke="#c084fc" stroke-width="1.4" stroke-linejoin="round"/>
+      <polygon points="11,1 13.5,8.5 21.5,8.5 15.2,13.2 17.6,21 11,16.5 4.4,21 6.8,13.2 0.5,8.5 8.5,8.5"
+        fill="rgba(192,132,252,0.15)"/>
+    </svg>
+    Starlight Streaming
+  </a>
+  <ul class="nav-links">
+    <li><a href="#browse">Browse</a></li>
+    <li><a href="#genres">Genres</a></li>
+    <li><a href="#">New Releases</a></li>
+    <li><a href="#">My List</a></li>
+  </ul>
+  <button class="nav-btn">Sign In</button>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-title-wrap">
+      <h1>
+        <span class="title-starlight">Starlight</span><span class="title-dot"></span><span class="title-streaming">Streaming</span>
+      </h1>
+    </div>
+    <div class="hero-tagline">Where Every Story Shines</div>
+    <p>Stream the finest anime — from timeless classics to the latest season releases. Your universe of stories awaits.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('browse').scrollIntoView({behavior:'smooth'})">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="2,1 13,7 2,13"/></svg>
+        Start Watching
+      </button>
+      <button class="btn-secondary" onclick="document.getElementById('browse').scrollIntoView({behavior:'smooth'})">Browse All Anime</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured ── -->
+<div class="featured">
+  <div class="featured-bg"></div>
+  <div class="featured-grid"></div>
+  <div class="featured-content">
+    <div class="featured-label">Featured Series</div>
+    <h2>Spotlight Picks</h2>
+    <p>Hand-picked series to get you started. From action-packed shonen to quiet slice-of-life — there's something here for every mood and every night.</p>
+    <div class="featured-actions">
+      <button class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="2,1 13,7 2,13"/></svg>
+        Watch Now
+      </button>
+      <button class="btn-secondary">+ Add to List</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Browse ── -->
+<section class="section" id="browse">
+  <div class="section-header">
+    <div class="section-title">Browse Anime</div>
+    <a href="#" class="see-all">See all →</a>
+  </div>
+
+  <!-- Genre filter -->
+  <div class="genre-filter">
+    <button class="genre-btn active" onclick="setGenre(this,'all')">All</button>
+    <button class="genre-btn" onclick="setGenre(this,'action')">Action</button>
+    <button class="genre-btn" onclick="setGenre(this,'romance')">Romance</button>
+    <button class="genre-btn" onclick="setGenre(this,'fantasy')">Fantasy</button>
+    <button class="genre-btn" onclick="setGenre(this,'scifi')">Sci-Fi</button>
+    <button class="genre-btn" onclick="setGenre(this,'horror')">Horror</button>
+    <button class="genre-btn" onclick="setGenre(this,'slice')">Slice of Life</button>
+    <button class="genre-btn" onclick="setGenre(this,'sports')">Sports</button>
+    <button class="genre-btn" onclick="setGenre(this,'mecha')">Mecha</button>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards-grid" id="anime-grid">
+    <!-- JS generated -->
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Continue Watching ── -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-title">Continue Watching</div>
+  </div>
+  <div class="cards-grid" id="continue-grid">
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-logo">✦ Starlight Streaming</div>
+  <p>Your personal anime universe · Built with love</p>
+  <p style="color: var(--muted); font-size: 0.75rem;">© 2025 Starlight Streaming</p>
+</footer>
+
+<script>
+  const ANIME = [
+    { title: "Celestial Blades", genre: "action",  year: 2024, rating: "9.1", eps: 24, color: "#2d1b69" },
+    { title: "Sakura Protocol", genre: "romance", year: 2023, rating: "8.7", eps: 12, color: "#1a1040" },
+    { title: "Void Chronicles", genre: "scifi",   year: 2024, rating: "9.3", eps: 26, color: "#0a1628" },
+    { title: "Ember Shrine",    genre: "fantasy",  year: 2023, rating: "8.9", eps: 13, color: "#1e0a10" },
+    { title: "Night Parade",    genre: "horror",   year: 2024, rating: "8.4", eps: 12, color: "#0d0d1a" },
+    { title: "Café at the End", genre: "slice",    year: 2023, rating: "9.0", eps: 24, color: "#0a1e15" },
+    { title: "Iron Striker",    genre: "mecha",    year: 2024, rating: "8.6", eps: 25, color: "#1a1200" },
+    { title: "Run, Hana!",      genre: "sports",   year: 2023, rating: "8.8", eps: 25, color: "#0a1a1a" },
+    { title: "Moonlit Path",    genre: "romance",  year: 2024, rating: "8.5", eps: 12, color: "#1a0d2e" },
+    { title: "Starfall Gate",   genre: "fantasy",  year: 2023, rating: "9.2", eps: 25, color: "#0d1a2e" },
+  ];
+
+  const CONTINUE = [
+    { title: "Void Chronicles", genre: "scifi",  year: 2024, rating: "9.3", eps: 26, color: "#0a1628", progress: 65 },
+    { title: "Celestial Blades",genre: "action", year: 2024, rating: "9.1", eps: 24, color: "#2d1b69", progress: 30 },
+    { title: "Run, Hana!",      genre: "sports", year: 2023, rating: "8.8", eps: 25, color: "#0a1a1a", progress: 80 },
+  ];
+
+  const GENRE_LABELS = {
+    action:"Action", romance:"Romance", fantasy:"Fantasy", scifi:"Sci-Fi",
+    horror:"Horror", slice:"Slice of Life", sports:"Sports", mecha:"Mecha"
+  };
+
+  function makeCard(anime, showProgress) {
+    const label = GENRE_LABELS[anime.genre] || anime.genre;
+    const prog = showProgress
+      ? `<div class="progress-bar"><div class="progress-fill" style="width:${anime.progress}%"></div></div>`
+      : '';
+    return `
+      <div class="card" data-genre="${anime.genre}" onclick="window.location.href='watch.html'" style="cursor:pointer;">
+        <div class="card-thumb">
+          <div class="card-thumb-placeholder" style="background: linear-gradient(160deg, ${anime.color} 0%, #05040f 100%);">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" opacity="0.3">
+              <polygon points="16,2 20,12 31,12 22,19 25,30 16,23 7,30 10,19 1,12 12,12" fill="white"/>
+            </svg>
+          </div>
+          <div class="card-overlay">
+            <div class="play-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="white"><polygon points="3,1 14,8 3,15"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-title">${anime.title}</div>
+          <div class="card-meta">
+            <span class="card-tag">${label}</span>
+            <span class="card-rating">★ ${anime.rating}</span>
+            <span>${anime.eps} eps</span>
+          </div>
+          ${prog}
+        </div>
+      </div>`;
+  }
+
+  function renderGrid(filter) {
+    const grid = document.getElementById('anime-grid');
+    const items = filter === 'all' ? ANIME : ANIME.filter(a => a.genre === filter);
+    grid.innerHTML = items.map(a => makeCard(a, false)).join('');
+  }
+
+  function setGenre(btn, genre) {
+    document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid(genre);
+  }
+
+  // Continue watching
+  document.getElementById('continue-grid').innerHTML = CONTINUE.map(a => makeCard(a, true)).join('');
+
+  renderGrid('all');
+</script>
+</body>
+</html>

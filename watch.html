@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch · Starlight Streaming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #05040f;
+      --bg2: #0c0b1e;
+      --bg3: #13112a;
+      --accent: #c084fc;
+      --accent2: #818cf8;
+      --gold: #fbbf24;
+      --text: #f1f0ff;
+      --muted: #7c7a9e;
+      --card-bg: #0f0e22;
+      --card-border: rgba(192, 132, 252, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── Stars ── */
+    .stars {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(129,140,248,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 10%, rgba(192,132,252,0.05) 0%, transparent 55%);
+    }
+    .stars::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 20%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 75%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 48% 55%, rgba(192,132,252,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 10%, rgba(255,255,255,0.6) 0%, transparent 100%);
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,4,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(192,132,252,0.1);
+    }
+    .logo {
+      font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 0.08em; color: var(--text);
+      display: flex; align-items: center; gap: 0.6rem;
+      text-decoration: none;
+    }
+    .logo-star {
+      width: 22px; height: 22px; flex-shrink: 0;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      color: var(--muted); text-decoration: none; font-size: 0.85rem;
+      transition: color 0.2s; letter-spacing: 0.03em;
+    }
+    .back-btn:hover { color: var(--text); }
+    .nav-btn {
+      background: var(--accent); color: #0f0e22;
+      border: none; padding: 0.5rem 1.2rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.04em; transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.85; }
+
+    /* ── Main layout ── */
+    .page { position: relative; z-index: 1; padding-top: 72px; }
+
+    /* ── Player area ── */
+    .player-section {
+      background: #000;
+      border-bottom: 1px solid rgba(192,132,252,0.1);
+    }
+    .player-container {
+      max-width: 1100px; margin: 0 auto;
+      padding: 2rem 2rem 0;
+    }
+    .player-wrapper {
+      position: relative; width: 100%; aspect-ratio: 16/9;
+      background: #000; border-radius: 8px 8px 0 0; overflow: hidden;
+      border: 1px solid rgba(192,132,252,0.2);
+      border-bottom: none;
+    }
+    .player-wrapper iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* Placeholder when no video */
+    .player-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #0d0b20 0%, #05040f 100%);
+      gap: 1rem;
+    }
+    .placeholder-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(192,132,252,0.15);
+      border: 1px solid rgba(192,132,252,0.3);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .placeholder-icon svg { margin-left: 4px; }
+    .player-placeholder p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── Episode bar ── */
+    .episode-bar {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 2rem;
+      background: rgba(13,11,32,0.95);
+      border: 1px solid rgba(192,132,252,0.2);
+      border-top: none;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      padding-top: 0.85rem; padding-bottom: 0.85rem;
+      border-radius: 0 0 8px 8px;
+    }
+    .ep-info { display: flex; align-items: center; gap: 1rem; }
+    .ep-badge {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
+      background: rgba(192,132,252,0.15); color: var(--accent);
+      padding: 0.3rem 0.75rem; border-radius: 2px;
+      border: 1px solid rgba(192,132,252,0.25);
+    }
+    .ep-title { font-size: 0.9rem; font-weight: 500; }
+    .ep-controls { display: flex; gap: 0.6rem; }
+    .ep-btn {
+      background: var(--bg3); color: var(--muted);
+      border: 1px solid var(--card-border); padding: 0.4rem 0.9rem;
+      border-radius: 4px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .ep-btn:hover { color: var(--accent); border-color: rgba(192,132,252,0.4); }
+    .ep-btn.primary { background: var(--accent); color: #0f0e22; border-color: transparent; }
+    .ep-btn.primary:hover { opacity: 0.85; color: #0f0e22; }
+
+    /* ── Info + episodes section ── */
+    .content-section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 2.5rem 2rem;
+      display: grid; grid-template-columns: 1fr 320px;
+      gap: 2.5rem;
+    }
+
+    /* ── Show info ── */
+    .show-info {}
+    .show-header { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-start; }
+    .show-poster {
+      width: 110px; flex-shrink: 0; aspect-ratio: 2/3;
+      border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--card-border);
+      background: linear-gradient(160deg, #2d1b69 0%, #05040f 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .show-poster svg { opacity: 0.3; }
+    .show-header-text {}
+    .show-title {
+      font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 700;
+      line-height: 1.1; margin-bottom: 0.5rem;
+    }
+    .show-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .tag {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.2rem 0.6rem; border-radius: 2px;
+    }
+    .tag-genre { background: rgba(192,132,252,0.12); color: var(--accent); }
+    .tag-year  { background: rgba(255,255,255,0.06); color: var(--muted); }
+    .tag-eps   { background: rgba(255,255,255,0.06); color: var(--muted); }
+    .show-rating {
+      display: flex; align-items: center; gap: 0.5rem;
+      color: var(--gold); font-size: 0.9rem; margin-bottom: 0.5rem;
+    }
+    .show-rating span { color: var(--muted); font-size: 0.8rem; }
+    .show-desc {
+      font-size: 0.9rem; color: var(--muted); line-height: 1.75;
+      margin-bottom: 1.5rem; max-width: 600px;
+    }
+    .show-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .btn-primary {
+      background: var(--accent); color: #0f0e22;
+      border: none; padding: 0.75rem 1.75rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2); padding: 0.75rem 1.75rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Episode list ── */
+    .episodes-heading {
+      font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.1em; margin-bottom: 1rem; color: var(--text);
+    }
+    .season-select {
+      background: var(--bg3); color: var(--text);
+      border: 1px solid var(--card-border); padding: 0.4rem 0.75rem;
+      border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+      cursor: pointer; margin-bottom: 1rem; outline: none;
+    }
+    .ep-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .ep-item {
+      display: flex; align-items: center; gap: 0.85rem;
+      padding: 0.75rem; border-radius: 6px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ep-item:hover { border-color: rgba(192,132,252,0.4); background: rgba(192,132,252,0.05); }
+    .ep-item.active { border-color: var(--accent); background: rgba(192,132,252,0.08); }
+    .ep-num {
+      font-size: 0.75rem; color: var(--muted); min-width: 28px;
+      font-family: 'Cinzel', serif;
+    }
+    .ep-item.active .ep-num { color: var(--accent); }
+    .ep-thumb {
+      width: 70px; height: 42px; border-radius: 4px; flex-shrink: 0;
+      background: var(--bg3); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .ep-detail { flex: 1; min-width: 0; }
+    .ep-name {
+      font-size: 0.82rem; font-weight: 500; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 0.2rem;
+    }
+    .ep-duration { font-size: 0.72rem; color: var(--muted); }
+    .ep-progress {
+      height: 2px; background: rgba(255,255,255,0.08); border-radius: 1px;
+      margin-top: 0.3rem; overflow: hidden;
+    }
+    .ep-progress-fill { height: 100%; background: var(--accent); border-radius: 1px; }
+
+    /* ── Sidebar ── */
+    .sidebar {}
+    .sidebar-heading {
+      font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.1em; margin-bottom: 1rem; color: var(--text);
+    }
+    .related-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .related-item {
+      display: flex; gap: 0.75rem; cursor: pointer;
+      padding: 0.5rem; border-radius: 6px; transition: background 0.2s;
+      text-decoration: none;
+    }
+    .related-item:hover { background: rgba(192,132,252,0.06); }
+    .related-thumb {
+      width: 72px; height: 96px; border-radius: 4px; flex-shrink: 0;
+      border: 1px solid var(--card-border);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .related-info { flex: 1; min-width: 0; }
+    .related-title {
+      font-size: 0.82rem; font-weight: 500; color: var(--text);
+      margin-bottom: 0.3rem; line-height: 1.3;
+    }
+    .related-meta { font-size: 0.72rem; color: var(--muted); }
+    .related-rating { color: var(--gold); font-size: 0.72rem; margin-top: 0.2rem; }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid rgba(192,132,252,0.1);
+      padding: 2rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.08em;
+    }
+    footer p { font-size: 0.75rem; color: var(--muted); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+
+    @media (max-width: 768px) {
+      .content-section { grid-template-columns: 1fr; }
+      nav { padding: 1rem 1.2rem; }
+      .player-container, .episode-bar { padding-left: 1rem; padding-right: 1rem; }
+      .content-section { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- ── Nav ── -->
+<nav>
+  <a href="index.html" class="logo">
+    <svg class="logo-star" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="11,1 13.5,8.5 21.5,8.5 15.2,13.2 17.6,21 11,16.5 4.4,21 6.8,13.2 0.5,8.5 8.5,8.5"
+        fill="none" stroke="#c084fc" stroke-width="1.4" stroke-linejoin="round"/>
+      <polygon points="11,1 13.5,8.5 21.5,8.5 15.2,13.2 17.6,21 11,16.5 4.4,21 6.8,13.2 0.5,8.5 8.5,8.5"
+        fill="rgba(192,132,252,0.15)"/>
+    </svg>
+    Starlight Streaming
+  </a>
+  <a href="index.html" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <polyline points="10,3 5,8 10,13"/>
+    </svg>
+    Back to Browse
+  </a>
+  <button class="nav-btn">Sign In</button>
+</nav>
+
+<div class="page">
+
+  <!-- ── Player ── -->
+  <div class="player-section">
+    <div class="player-container">
+      <div class="player-wrapper">
+        <!-- YouTube embed loads here when an episode is selected -->
+        <div class="player-placeholder" id="player-placeholder">
+          <div class="placeholder-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="var(--accent)">
+              <polygon points="6,2 24,14 6,26"/>
+            </svg>
+          </div>
+          <p>Select an episode below to start watching</p>
+        </div>
+        <iframe id="yt-player" style="display:none;"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Episode bar -->
+    <div class="episode-bar">
+      <div class="ep-info">
+        <div class="ep-badge" id="ep-label">Episode 1</div>
+        <div class="ep-title" id="ep-title-bar">Select an episode to begin</div>
+      </div>
+      <div class="ep-controls">
+        <button class="ep-btn" onclick="prevEp()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><polygon points="10,1 2,6 10,11"/></svg>
+          Prev
+        </button>
+        <button class="ep-btn primary" onclick="playCurrentEp()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 11,6 2,11"/></svg>
+          Play
+        </button>
+        <button class="ep-btn" onclick="nextEp()">
+          Next
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 10,6 2,11"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Content ── -->
+  <div class="content-section">
+
+    <!-- Left: show info + episode list -->
+    <div>
+      <div class="show-info">
+        <div class="show-header">
+          <div class="show-poster">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="white">
+              <polygon points="16,2 20,12 31,12 22,19 25,30 16,23 7,30 10,19 1,12 12,12"/>
+            </svg>
+          </div>
+          <div class="show-header-text">
+            <div class="show-title" id="show-title">Void Chronicles</div>
+            <div class="show-tags">
+              <span class="tag tag-genre">Sci-Fi</span>
+              <span class="tag tag-genre">Action</span>
+              <span class="tag tag-year">2024</span>
+              <span class="tag tag-eps">26 Episodes</span>
+            </div>
+            <div class="show-rating">
+              ★★★★★ 9.3
+              <span>· 42,800 ratings</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="show-desc">
+          In a distant future where humanity has colonized the edges of the galaxy, a lone scout discovers an ancient void signal that may unravel the fabric of known space. Part hard sci-fi epic, part intimate character study — this series redefines what anime can be.
+        </p>
+
+        <div class="show-actions">
+          <button class="btn-primary" onclick="playEp(0)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="2,1 13,7 2,13"/></svg>
+            Play from Ep 1
+          </button>
+          <button class="btn-secondary">+ My List</button>
+          <button class="btn-secondary">↗ Share</button>
+        </div>
+      </div>
+
+      <!-- Episode list -->
+      <div class="episodes-heading">Episodes</div>
+      <select class="season-select" onchange="changeSeason(this.value)">
+        <option value="1">Season 1</option>
+        <option value="2">Season 2</option>
+      </select>
+
+      <div class="ep-list" id="ep-list">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <!-- Right: related shows -->
+    <div class="sidebar">
+      <div class="sidebar-heading">You Might Also Like</div>
+      <div class="related-list" id="related-list">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">✦ Starlight Streaming</div>
+    <p>Your personal anime universe · Built with love</p>
+    <p>© 2025 Starlight Streaming</p>
+  </footer>
+
+</div>
+
+<script>
+  // ── Episode data ──
+  // To add real YouTube videos, replace the youtubeId values with actual YouTube video IDs.
+  // Example: for https://www.youtube.com/watch?v=dQw4w9WgXcQ, the ID is "dQw4w9WgXcQ"
+  const EPISODES = {
+    1: [
+      { num: 1,  title: "The Signal at the Edge",    duration: "24 min", progress: 100, youtubeId: "" },
+      { num: 2,  title: "Into the Void",              duration: "23 min", progress: 100, youtubeId: "" },
+      { num: 3,  title: "Ghost Frequencies",          duration: "25 min", progress: 65,  youtubeId: "" },
+      { num: 4,  title: "The First Contact",          duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 5,  title: "Starfall Protocol",          duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 6,  title: "Echoes of the Ancients",     duration: "26 min", progress: 0,   youtubeId: "" },
+      { num: 7,  title: "Dark Matter Heart",          duration: "23 min", progress: 0,   youtubeId: "" },
+      { num: 8,  title: "The Collapse",               duration: "25 min", progress: 0,   youtubeId: "" },
+    ],
+    2: [
+      { num: 1,  title: "Beyond the Rift",            duration: "24 min", progress: 0,   youtubeId: "" },
+      { num: 2,  title: "New Horizons",               duration: "23 min", progress: 0,   youtubeId: "" },
+      { num: 3,  title: "The Unnamed Star",           duration: "25 min", progress: 0,   youtubeId: "" },
+      { num: 4,  title: "Fracture Point",             duration: "24 min", progress: 0,   youtubeId: "" },
+    ]
+  };
+
+  const RELATED = [
+    { title: "Celestial Blades",  genre: "Action",  year: 2024, rating: "9.1", color: "#2d1b69" },
+    { title: "Starfall Gate",     genre: "Fantasy", year: 2023, rating: "9.2", color: "#0d1a2e" },
+    { title: "Iron Striker",      genre: "Mecha",   year: 2024, rating: "8.6", color: "#1a1200" },
+    { title: "Ember Shrine",      genre: "Fantasy", year: 2023, rating: "8.9", color: "#1e0a10" },
+  ];
+
+  let currentSeason = 1;
+  let currentEpIndex = 2; // start on ep 3 (the one in progress)
+
+  function renderEpisodes() {
+    const eps = EPISODES[currentSeason];
+    const list = document.getElementById('ep-list');
+    list.innerHTML = eps.map((ep, i) => `
+      <div class="ep-item ${i === currentEpIndex ? 'active' : ''}" onclick="playEp(${i})">
+        <div class="ep-num">${String(ep.num).padStart(2,'0')}</div>
+        <div class="ep-thumb" style="background: linear-gradient(135deg, #0d0b20, #05040f);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="rgba(192,132,252,0.4)">
+            <polygon points="3,1 14,8 3,15"/>
+          </svg>
+        </div>
+        <div class="ep-detail">
+          <div class="ep-name">${ep.title}</div>
+          <div class="ep-duration">${ep.duration}</div>
+          ${ep.progress > 0 ? `<div class="ep-progress"><div class="ep-progress-fill" style="width:${ep.progress}%"></div></div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderRelated() {
+    document.getElementById('related-list').innerHTML = RELATED.map(r => `
+      <a class="related-item" href="watch.html">
+        <div class="related-thumb" style="background: linear-gradient(160deg, ${r.color} 0%, #05040f 100%);">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="rgba(255,255,255,0.2)">
+            <polygon points="16,2 20,12 31,12 22,19 25,30 16,23 7,30 10,19 1,12 12,12"/>
+          </svg>
+        </div>
+        <div class="related-info">
+          <div class="related-title">${r.title}</div>
+          <div class="related-meta">${r.genre} · ${r.year}</div>
+          <div class="related-rating">★ ${r.rating}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  function playEp(index) {
+    currentEpIndex = index;
+    const ep = EPISODES[currentSeason][index];
+
+    // Update episode bar
+    document.getElementById('ep-label').textContent = `Episode ${ep.num}`;
+    document.getElementById('ep-title-bar').textContent = ep.title;
+
+    // Load YouTube player if ID is provided
+    const placeholder = document.getElementById('player-placeholder');
+    const iframe = document.getElementById('yt-player');
+
+    if (ep.youtubeId) {
+      iframe.src = `https://www.youtube.com/embed/${ep.youtubeId}?autoplay=1`;
+      placeholder.style.display = 'none';
+      iframe.style.display = 'block';
+    } else {
+      // No video linked yet — show placeholder message
+      placeholder.style.display = 'flex';
+      placeholder.innerHTML = `
+        <div class="placeholder-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="var(--accent)">
+            <polygon points="6,2 24,14 6,26"/>
+          </svg>
+        </div>
+        <p style="color: var(--text); font-size: 1rem; font-weight: 500;">${ep.title}</p>
+        <p style="color: var(--muted); font-size: 0.85rem;">No video linked yet — add a YouTube ID to watch this episode</p>
+      `;
+      iframe.style.display = 'none';
+    }
+
+    // Update active state in list
+    renderEpisodes();
+    // Scroll episode into view
+    const items = document.querySelectorAll('.ep-item');
+    if (items[index]) items[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function playCurrentEp() { playEp(currentEpIndex); }
+
+  function nextEp() {
+    const eps = EPISODES[currentSeason];
+    if (currentEpIndex < eps.length - 1) playEp(currentEpIndex + 1);
+  }
+
+  function prevEp() {
+    if (currentEpIndex > 0) playEp(currentEpIndex - 1);
+  }
+
+  function changeSeason(val) {
+    currentSeason = parseInt(val);
+    currentEpIndex = 0;
+    renderEpisodes();
+  }
+
+  // Init
+  renderEpisodes();
+  renderRelated();
+</script>
+
+</body>
+</html>
